@@ -116,6 +116,11 @@ public class ClientsController {
         return "redirect:/clients";
     }
 
+    @GetMapping("/delete")
+    public String deleteClient(@RequestParam int id){
 
+        clientsRepository.deleteClient(id);
+        return "redirect:/clients";
+    }
 
 }
