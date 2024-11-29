@@ -88,14 +88,14 @@ public class ClientsRepository {
                 , client.getEmail(), client.getPhone(), client.getAddress(), client.getCreatedAt());
 
         if (count > 0) {
-            int id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID", Integer.class);
+            int id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
             return getClient(id);
         }
         return  null;
     }
 
     public Client updateClient(Client client) {
-        String sql = "UPDATE clients SET first_name=?, last_name=?, email=?, phone=?, address=?, created_at=?) " +
+        String sql = "UPDATE clients SET first_name=?, last_name=?, email=?, phone=?, address=?, created_at=?" +
                 "WHERE id=?";
         jdbcTemplate.update(sql, client.getFirstName(), client.getLastName()
                 , client.getEmail(), client.getPhone(), client.getAddress(), client.getCreatedAt()
