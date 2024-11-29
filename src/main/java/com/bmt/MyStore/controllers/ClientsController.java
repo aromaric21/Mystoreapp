@@ -22,10 +22,12 @@ public class ClientsController {
     @Autowired
     private ClientsRepository clientsRepository;
 
+    private final int pageSize = 5;
+
     @GetMapping
-    public String getClients(Model model) {
-        List<Client> clients = clientsRepository.getClients();
-        model.addAttribute("clients", clients);
+    public String getClients(Model model, @RequestParam(defaultValue = "1") int pageIndex) {
+        var page = clientsRepository.getClients(pageIndex, pageSize);
+        model.addAttribute("page", page);
         return "clients/index";
     }
 

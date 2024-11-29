@@ -37,6 +37,41 @@ public class ClientsRepository {
         return clients;
     }
 
+    public class Page{
+        public List<Client> clients;
+        public int totalPages;
+        public int pageIndex;
+    }
+
+    public Page getClients(int pageIndex, int pageSize){
+        var clients = new ArrayList<Client>();
+
+        // Get number of clients
+        String sqlCount = "SELECT COUNT(*) FROM clients";
+        int numClients = jdbcTemplate.queryForObject(sqlCount, Integer.class) ;
+
+        String sql = "SELECT * FROM clients ORDER BY id DESC LIMIT ? OFFSET ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, pageSize, (pageIndex - 1)* pageSize);
+
+        while (rows.next()){
+            Client client = new Client();
+            client.setId(rows.getInt("id"));
+            client.setFirstName(rows.getString("first_name"));
+            client.setLastName(rows.getString("last_name"));
+            client.setEmail(rows.getString("email"));
+            client.setPhone(rows.getString("phone"));
+            client.setAddress(rows.getString("address"));
+            client.setCreatedAt(rows.getString("created_at"));
+
+            clients.add(client);
+        }
+
+        var page = new Page();
+        page.clients =clients;
+        page.totalPages = (int) Math.ceil((double) numClients / pageSize);
+        return page;
+    }
+
     public Client getClient(int id){
 
         String sql = "SELECT * FROM clients WHERE id=?";
